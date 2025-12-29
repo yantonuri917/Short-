@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>short</title>
+  <style>
+    /* ===== Reset & Typography ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    /* ===== Container ===== */
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h2 {
+      margin-bottom: 30px;
+      font-size: 2rem;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    /* ===== Input & Button ===== */
+    input {
+      padding: 12px 20px;
+      width: 70%;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 25px;
+      border-radius: 10px;
+      border: none;
+      background: #ff6b6b;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ff8787;
+    }
+
+    /* ===== Output ===== */
+    #output {
+      margin-top: 20px;
+      word-break: break-all;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.2);
+      padding: 15px;
+      border-radius: 10px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    a {
+      color: #ffe066;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== Animation ===== */
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Short Link Generator</h2>
+    <input id="longUrl" placeholder="Masukkan link panjang">
+    <button onclick="generate()">Generate</button>
+    <p id="output"></p>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "short_links";
+
+    function loadLinks() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    }
+
+    function saveLinks(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function randomCode(length = 6) {
+      const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      return Array.from({length}, () =>
+        chars[Math.floor(Math.random() * chars.length)]
+      ).join("");
+    }
+
+    function generate() {
+      const url = document.getElementById("longUrl").value;
+      if (!url) return alert("Masukkan URL dulu");
+
+      const links = loadLinks();
+      let code;
+      do { code = randomCode(); } while (links[code]);
+
+      links[code] = url;
+      saveLinks(links);
+
+      const shortUrl = location.origin + location.pathname + "#" + code;
+      document.getElementById("output").innerHTML =
+        `Short link: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+    }
+
+    // === REDIRECT ===
+    const code = location.hash.substring(1);
+    if (code) {
+      const links = loadLinks();
+      if (links[code]) {
+        location.href = links[code];
+      } else {
+        document.body.innerHTML = "<h3 style='text-align:center;margin-top:20%;color:#fff;'>Link tidak ditemukan</h3>";
+      }
+    }
+  </script>
+  
+  <script type="text/javascript">
+
+var _Hasync=_Hasync||[];
+
+_Hasync.push(['Histats.start','1,4978236,4,0,0,0,00000000']);
+
+_Hasync.push(['Histats.fasi','1']);
+
+_Hasync.push(['Histats.track_hits','']);
+
+(function(){
+
+  var hs=document.createElement('script');hs.type='text/javascript';hs.async=true;
+
+  hs.src=('//s10.histats.com/js15_as.js');
+
+  (document.head||document.body).appendChild(hs);
+
+})();
+
+</script>
+
+<noscript><a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?4978236&101" alt="hit counter" border="0"></a>
+
+  </noscript>
+
+  
+</body>
+</html>
