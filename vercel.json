@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "src": "/api/create", "dest": "/api/create.js" },
+    { "src": "/(.+)", "dest": "/[code].js" }
+  ]
+}
