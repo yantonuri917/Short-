@@ -1,61 +1,28 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Short Link Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #1e1e2f;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: #2a2a40;
-      padding: 30px;
-      border-radius: 12px;
-      text-align: center;
-      width: 320px;
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #ff6b6b;
-      color: #fff;
-      font-size: 16px;
-    }
-    a {
-      color: #ffd43b;
-      word-break: break-all;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Shorten Link</title>
 </head>
 <body>
-  <div class="box">
-    <h2>Short Link Generator</h2>
-    <button onclick="generate()">Generate</button>
-    <p id="output"></p>
-  </div>
+  <h2>Shorten Link</h2>
+  <input id="url" placeholder="Masukkan link" />
+  <button onclick="shorten()">Generate</button>
+  <p id="out"></p>
 
   <script>
-    function randomCode(length = 8) {
-      const chars =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      return Array.from({ length }, () =>
-        chars[Math.floor(Math.random() * chars.length)]
-      ).join("");
-    }
+    async function shorten() {
+      const url = document.getElementById("url").value;
+      if (!url) return alert("Masukkan URL");
 
-    function generate() {
-      const code = randomCode();
-      const url = location.origin + "/" + code;
-      document.getElementById("output").innerHTML =
-        `Link hasil shorten:<br><a href="${url}" target="_blank">${url}</a>`;
+      const res = await fetch(
+        "/api/create?url=" + encodeURIComponent(url)
+      );
+      const data = await res.json();
+      const short = location.origin + data.short;
+
+      document.getElementById("out").innerHTML =
+        `<a href="${short}" target="_blank">${short}</a>`;
     }
   </script>
 </body>
