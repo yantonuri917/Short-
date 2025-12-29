@@ -117,32 +117,39 @@
       ).join("");
     }
 
-    function generate() {
-      const url = document.getElementById("longUrl").value;
-      if (!url) return alert("Masukkan URL dulu");
+   function generate() {
+  const url = document.getElementById("longUrl").value;
+  if (!url) return alert("Masukkan URL dulu");
 
-      const links = loadLinks();
-      let code;
-      do { code = randomCode(); } while (links[code]);
+  const links = loadLinks();
+  let code;
+  do { code = randomCode(); } while (links[code]);
 
-      links[code] = url;
-      saveLinks(links);
+  links[code] = url;
+  saveLinks(links);
 
-      const shortUrl = location.origin + location.pathname + "#" + code;
-      document.getElementById("output").innerHTML =
-        `Short link: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
-    }
+  const shortUrl = location.origin + "/" + code;
+
+  // ubah URL tanpa reload
+  history.pushState(null, "", "/" + code);
+
+  document.getElementById("output").innerHTML =
+    `Short link: <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+}
 
     // === REDIRECT ===
-    const code = location.hash.substring(1);
-    if (code) {
-      const links = loadLinks();
-      if (links[code]) {
-        location.href = links[code];
-      } else {
-        document.body.innerHTML = "<h3 style='text-align:center;margin-top:20%;color:#fff;'>Link tidak ditemukan</h3>";
-      }
-    }
+    const code = location.pathname.replace("/", "");
+
+if (code) {
+  const links = loadLinks();
+  if (links[code]) {
+    location.href = links[code];
+  } else {
+    document.body.innerHTML =
+      "<h3 style='text-align:center;margin-top:20%;color:#fff;'>Link tidak ditemukan</h3>";
+  }
+}
+
   </script>
   
   <script type="text/javascript">
